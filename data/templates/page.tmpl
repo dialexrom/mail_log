@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Application</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a2a6c, #3a7bd5);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            margin: 30px auto;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .form-container legend {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1a2a6c;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .form-container input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 14px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        .form-container input[type="text"]:focus {
+            border-color: #3a7bd5;
+            outline: none;
+        }
+
+        .form-container input[type="submit"] {
+            background: linear-gradient(135deg, #1a2a6c, #3a7bd5);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.3s ease;
+            margin-top: 15px;
+            width: 100%;
+        }
+
+        .form-container input[type="submit"]:hover {
+            background: linear-gradient(135deg, #3a7bd5, #1a2a6c);
+            transform: translateY(-2px);
+        }
+
+        table {
+            width: 90%;
+            margin: 30px auto;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: linear-gradient(135deg, #1a2a6c, #3a7bd5);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        tr:hover td {
+            background-color: #f8f9fa;
+        }
+
+        .count-container {
+            text-align: center;
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #3a7bd5;
+            box-shadow: 0 4px 20px white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #1a2a6c;
+        }
+
+        .count-container p {
+            margin: 0;
+        }
+
+        .error-banner {
+            background-color: #ffcccc;
+            color: #d8000c;
+            padding: 15px;
+            text-align: center;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid #d8000c;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 600px) {
+
+            .form-container,
+            table,
+            .count-container,
+            .error-banner {
+                width: 95%;
+            }
+
+            th,
+            td {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .form-container legend {
+                font-size: 20px;
+            }
+
+            .count-container {
+                font-size: 16px;
+            }
+        }
+
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>Search in mail log</h1>
+    </div>
+    <TMPL_IF NAME="SHOW_ERROR">
+        <div class="error-banner">
+            No results found. Please try a different search.
+        </div>
+    </TMPL_IF>
+    <div class="form-container">
+        <form action="http://localhost:5000/cgi/searcher.pl" method="post">
+            <fieldset>
+                <legend>Write address to search</legend>
+                <input type="text" name="address" placeholder="Enter address here..." required>
+                <input type="submit" value="Search">
+            </fieldset>
+        </form>
+    </div>
+    <TMPL_IF NAME="ROWS">
+        <table>
+            <thead>
+                <tr>
+                    <th>Address</th>
+                    <th>Log string</th>
+                </tr>
+            </thead>
+            <tbody>
+                <TMPL_LOOP NAME="ROWS">
+                    <tr>
+                        <td>
+                            <TMPL_VAR NAME="CREATED" ESCAPE="HTML">
+                        </td>
+                        <td>
+                            <TMPL_VAR NAME="STR" ESCAPE="HTML">
+                        </td>
+                    </tr>
+                </TMPL_LOOP>
+            </tbody>
+        </table>
+    </TMPL_IF>
+    <TMPL_IF NAME="COUNT">
+        <div class="count-container">
+            <p>Total found data: <TMPL_VAR NAME="COUNT">
+            </p>
+        </div>
+    </TMPL_IF>
+</body>
+
+</html>
