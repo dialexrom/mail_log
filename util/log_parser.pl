@@ -26,7 +26,6 @@ sub saveDataToDb {
 
 sub main {
     my $fileToParse = getFileToParse();
-    $DB::single=1;
     my $dataLog     = readDataFile( $fileToParse );
 
     if ( $dataLog ) {
